@@ -1,42 +1,27 @@
-const heroes = [
-    {
-        name: "Mroczny Patryk",
-        level: 35,
-        map: "Torneg"
-    },
-    {
-        name: "Karmazynowy Mściciel",
-        level: 45,
-        map: "Fort Eder"
-    },
-    {
-        name: "Złodziej",
-        level: 51,
-        map: "Eder"
-    }
-];
-
-const searchInput = document.getElementById("hero-search");
+const heroSelect = document.getElementById("hero-search");
 const searchButton = document.getElementById("search-button");
 const result = document.getElementById("result");
 
+heroes.forEach(function(hero) {
+    const option = document.createElement("option");
+
+    option.value = hero.key;
+    option.textContent = hero.value;
+
+    heroSelect.appendChild(option);
+});
+
 searchButton.addEventListener("click", function() {
 
-    const foundHero = heroes.find(hero => hero.name === searchInput.value);
+    const foundHero = heroes.find(hero => hero.key === heroSelect.value);
 
     if (foundHero) {
-        
         console.log("Searching for hero: ", foundHero);
 
         result.textContent =
-        "Hero: " + foundHero.name + " | " +
-        "Level: " + foundHero.level + " | " +
-        "Map: " + foundHero.map;
+        "Hero: " + foundHero.value + " | " +
+        "Level: " + foundHero.level;
     } else {
-
-        result.textContent = "Hero not found."
-
+        result.textContent = "Hero not found.";
     }
-    
-
 });
