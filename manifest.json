@@ -3,7 +3,23 @@
     "name": "Hero Finder",
     "version": "0.1.0",
     "description": "Our own browser extension for finding heroes.",
-    "action": {
-        "default_popup": "popup.html"
-    }
+    "action": {},
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.margonem.pl/*",
+                "*://*.margonem.com/*"
+            ],
+            "exclude_matches": [
+                "*://forum.margonem.pl/*",
+                "*://pomoc.margonem.pl/*",
+                "*://www.margonem.pl/*"
+            ],
+            "js": ["content.js"],
+            "css": ["content.css"]
+        }
+    ]
 }
