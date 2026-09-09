@@ -3,7 +3,9 @@
     "name": "Hero Finder",
     "version": "0.1.0",
     "description": "Our own browser extension for finding heroes.",
-    "action": {},
+    "action": {
+        "default_popup": "popup.html"
+    },
     "background": {
         "service_worker": "background.js"
     },
