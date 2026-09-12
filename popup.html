@@ -9,6 +9,7 @@
             margin: 0;
             width: 780px;
             height: 504px;
+
             font-family: Arial, sans-serif;
             background-color: #0e141c;
         }
@@ -20,19 +21,6 @@
 
             width: 100%;
             height: 100%;
-        }
-
-        .ui-icon {
-            width: 18px;
-            height: 18px;
-
-            flex-shrink: 0;
-
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
 
 
@@ -62,13 +50,14 @@
 
         .header-logo {
             display: flex;
-
-            color: #4ade80;
         }
 
-        .header-logo .ui-icon {
+        .header-logo img {
             width: 28px;
             height: 28px;
+
+            display: block;
+            object-fit: contain;
         }
 
         .header h1 {
@@ -121,6 +110,9 @@
         .sidebar {
             grid-column: 1;
 
+            display: flex;
+            flex-direction: column;
+
             padding: 14px 10px;
             
             background-color: #111923;
@@ -167,6 +159,44 @@
             color: #35d483;
         }
 
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 12px 10px 2px;
+
+            border-top: 1px solid #202b3a;
+        }
+
+        .extension-status {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            color: #9daabe;
+
+            font-size: 11px;
+        }
+
+        .extension-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background-color: #35d483;
+        }
+
+        .extension-version {
+            display: block;
+
+            margin-top: 6px;
+            margin-left: 14px;
+
+            color: #637086;
+
+            font-size: 10px;
+        }
+
 
         /* MAIN */
 
@@ -211,8 +241,14 @@
             border-radius: 50%;
 
             background-color: #123b30;
+        }
 
-            font-size: 32px;
+        .status-icon img {
+            width: 42px;
+            height: 42px;
+
+            display: block;
+            object-fit: contain;
         }
 
         .status-info {
@@ -318,10 +354,6 @@
             font-size: 12px;
         }
 
-        .stat-title:first-letter {
-            font-size: 18px;
-        }
-
         .stat-icon {
             width: 18px;
             height: 18px;
@@ -386,6 +418,7 @@
             color: white;
 
             font-size: 16px;
+            line-height: 18px;
         }
 
         .logs-header span {
@@ -411,6 +444,8 @@
             flex-shrink: 0;
 
             color: #b5c0d4;
+
+            transform: translateY(-1px);
         }
 
         .log-item {
@@ -463,12 +498,7 @@
             <div class="header-title">
             
                 <div class="header-logo">
-                    
-                    <svg class="ui-icon" viewBox="0 0 24 24">
-                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 18 2 18 2c0 4.5-1.5 8.5-6 10"></path>
-                        <path d="M2 21c3-6 7-9 14-12"></path>
-                    </svg>
-
+                    <img src="logo.png" alt="Seraf Bot">
                 </div>
 
                 <div class="header-text">
@@ -533,7 +563,7 @@
                     <path d="M9.55859 3.8045V10.1682V21.15H15.3035V3.8045C15.3035 3.27569 14.8748 2.84702 14.346 2.84702H10.5161C9.98727 2.84702 9.55859 3.27569 9.55859 3.8045Z"/>
                 </svg>
 
-                <span>Statistics</span>
+                <span>Statystyki</span>
             
             </button>
 
@@ -543,7 +573,7 @@
                     <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M160 64h480l256 256v608 a32 32 0 0 1-32 32H160 a32 32 0 0 1-32-32V96 a32 32 0 0 1 32-32z M640 154.496V320h165.504z M320 320h160v64H320z M320 512h384v64H320z M320 704h384v64H320z"/>
                 </svg>
                 
-                <span>Logs</span>
+                <span>Logi</span>
 
             </button>
 
@@ -557,6 +587,16 @@
 
             </button>
 
+            <div clas="sidebar-footer">
+
+                <div class="extension-status">
+                    <span class="extension-dot"></span>
+                    <span>Rozszerzenie aktywne</span>
+                </div>
+
+                <span class="extension-version">v1.0.0</span>
+            </div>
+
         </aside>
 
 
@@ -565,7 +605,7 @@
             <section class="bot-status">
 
                 <div class="status-icon">
-                    🌿
+                    <img src="images/icon-active.png" alt="Active Status">
                 </div>
 
                 <div class="status-info">
@@ -656,8 +696,6 @@
             <section class="logs-panel">
 
                 <div class="logs-header">
-
-                    
 
                     <h2>
                         <svg class="logs-icon" viewBox="0 0 1024 1024">
