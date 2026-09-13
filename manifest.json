@@ -21,5 +21,19 @@
             "js": ["content.js"],
             "css": ["content.css"]
         }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "popup.html",
+                "logo.png",
+                "images/icon-active.png",
+                "images/icon-inactive.png"
+            ],
+            "matches": [
+                "*://*.margonem.pl/*",
+                "*://*.margonem.com/*"
+            ]
+        }
     ]
 }
