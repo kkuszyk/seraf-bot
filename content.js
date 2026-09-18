@@ -2,7 +2,7 @@ const PANEL_POSITION_KEY = "seraf-bot-panel-position";
 const MINI_POSITION_KEY = "seraf-bot-mini-position";
 const MINI_PINNED_KEY = "seraf-bot-mini-pinned";
 
-let dragCleanup = [];
+let dragCleanups = [];
 
 
 chrome.runtime.onMessage.addListener((message) => {
@@ -64,7 +64,7 @@ async function togglePanel() {
     document.body.appendChild(panel);
 
 
-    restorePanelPosition(panel, PANEL_POSITION_KEY);
+    restorePosition(panel, PANEL_POSITION_KEY);
 
 
     const header = panel.querySelector(".header");
@@ -205,7 +205,7 @@ function toggleMiniPin(miniPanel, miniPin) {
 }
 
 
-function restorePinnedState(minipanel, miniPin) {
+function restorePinnedState(miniPanel, miniPin) {
     const savedPinnedState = localStorage.getItem(
         MINI_PINNED_KEY
     );
@@ -220,6 +220,8 @@ function restorePinnedState(minipanel, miniPin) {
 
 
     miniPanel.classList.toggle("is-pinned", isPinned);
+
+    miniPin.classList.toggle("active", isPinned);
 }
 
 
@@ -314,13 +316,13 @@ function enablePanelDragging(
         const panelPosition = panel.getBoundingClientRect();
 
 
-        offsetX = event.ClientX - panelPosition.left;
+        offsetX = event.clientX - panelPosition.left;
 
-        offsetY = event.ClientY - panelPosition.top;
+        offsetY = event.clientY - panelPosition.top;
 
 
         startX = event.clientX;
-        startY = event.ClientY;
+        startY = event.clientY;
 
         hasDragged = false;
 
@@ -387,7 +389,7 @@ function enablePanelDragging(
 
     document.addEventListener("mousemove", movePanel);
 
-    document.addEventListener("moveup", stopDragging);
+    document.addEventListener("mouseup", stopDragging);
 
 
     return {
