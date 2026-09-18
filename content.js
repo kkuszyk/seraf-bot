@@ -70,10 +70,6 @@ async function togglePanel() {
     );
 
 
-    const miniLogo = miniPanel.querySelector(".mini-logo");
-    miniLogo.src = chrome.runtime.getURL("logo.png");
-
-
     panel.appendChild(app);
     panel.appendChild(miniPanel);
 
@@ -107,6 +103,10 @@ async function togglePanel() {
 
     const closeButton = panel.querySelector(".close-button");
 
+    const mainPowerButton = panel.querySelector(".pause-button");
+
+    const stopButton = panel.querySelector(".stop-button");
+
     const miniPin = panel.querySelector(".mini-pin");
 
     const miniPower = panel.querySelector(".mini-power");
@@ -129,6 +129,16 @@ async function togglePanel() {
         removePanel(panel);
         }
     );
+
+
+    mainPowerButton.addEventListener("click", () => {
+        toggleBotState(panel);
+    });
+
+
+    stopButton.addEventListener("click", () => {
+        stopBot(panel);
+    });
 
 
     const headerDrag = enablePanelDragging(
@@ -179,7 +189,7 @@ async function togglePanel() {
     miniPower.addEventListener("click", (event) => {
         event.stopPropagation();
 
-        toggleMiniPower(panel);
+        toggleBotState(panel);
         }
     );
 
@@ -194,17 +204,29 @@ async function togglePanel() {
 function updateBotUI(panel, isActive) {
     const miniPower = panel.querySelector(".mini-power");
 
+    const miniLogo = panel.querySelector(".mini-logo");
+
     const statusText = panel.querySelector(".status-text");
 
     const statusState = panel.querySelector(".status-active");
 
     const statusIcon = panel.querySelector(".status-icon img");
 
+    const botStatus = panel.querySelector(".bot-status");
+
+    const mainPowerButton = panel.querySelector(".pause-button");
+
 
     miniPower.classList.toggle(
         "active",
         isActive
     );
+
+
+    miniLogo.classList.toggle(
+        "inactive",
+        !isActive
+    )
 
 
     statusText.textContent =
@@ -219,15 +241,51 @@ function updateBotUI(panel, isActive) {
     );
 
 
-    statusIcon.src = chrome.runtime.getURL(
+    botStatus.classList.toggle(
+        "inactive",
+        !isActive
+    );
+
+
+    mainPowerButton.classList.toggle(
+        "inactive",
+        !isActive
+    );
+
+
+    mainPowerButton.textContent =
+        isActive
+            ? "Wstrzymaj"
+            : "Uruchom";
+    
+
+    const iconPath =
         isActive
             ? "images/icon-active.png"
-            : "images/icon-inactive.png"
+            : "images/icon-inactive.png";
+
+
+    statusIcon.src = chrome.runtime.getURL(iconPath);
+
+    miniLogo.src = chrome.runtime.getURL(iconPath);
+}
+
+
+function setBotState(panel, isActive) {
+    localStorage.setItem(
+        BOT_ACTIVE_KEY,
+        JSON.stringify(isActive)
+    );
+
+
+    updateBotUI(
+        panel,
+        isActive
     );
 }
 
 
-function toggleMiniPower(miniPower) {
+function toggleBotState(panel) {
     const savedState = localStorage.getItem(BOT_ACTIVE_KEY);
 
 
@@ -237,18 +295,17 @@ function toggleMiniPower(miniPower) {
             : JSON.parse(savedState);
     
 
-    const newState = !currentState;
-
-
-    localStorage.setItem(
-        BOT_ACTIVE_KEY,
-        JSON.stringify(newState)
-    );
-
-
-    updateBotUI(
+    setBotState(
         panel,
-        newState
+        !currentState
+    );
+}
+
+
+function stopBot(panel) {
+    setBotState(
+        panel,
+        false
     );
 }
 

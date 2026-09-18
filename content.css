@@ -229,6 +229,15 @@
     background-color: #10231f;
 }
 
+#seraf-bot-panel .bot-status.inactive {
+    border-color: #633a3f;
+    background-color: #251719;
+}
+
+#seraf-bot-panel .bot-status.inactive .status-icon {
+    background-color: #3b2024;
+}
+
 #seraf-bot-panel .status-icon {
     width: 60px;
     height: 60px;
@@ -316,11 +325,33 @@
     cursor: pointer;
 }
 
+#seraf-bot-panel .pause-button,
+#seraf-bot-panel .stop-button {
+    width: 130px;
+    height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 16px;
+
+    white-space: nowrap;
+
+    box-sizing: border-box;
+}
+
 #seraf-bot-panel .pause-button {
-    border: none;
+    border: 1px solid transparent;
 
     background-color: #25b96b;
     color: white;
+}
+
+#seraf-bot-panel .pause-button.inactive {
+    background-color: #b84a55;
 }
 
 #seraf-bot-panel .stop-button {
@@ -328,6 +359,30 @@
 
     background-color: #19212d;
     color: white;
+}
+
+#seraf-bot-panel .pause-button::before,
+#seraf-bot-panel .stop-button::before {
+    display: inline-block;
+
+    width: 16px;
+
+    flex-shrink: 0;
+
+    text-align: center;
+    line-height: 1;
+}
+
+#seraf-bot-panel .pause-button::before {
+    content: "▶";
+
+    font-size: 18px;
+}
+
+#seraf-bot-panel .stop-button::before {
+    content: "■";
+
+    font-size: 18px;
 }
 
 
@@ -528,13 +583,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+
+    padding: 6px;
+
+    border-radius: 50%;
+
+    background-color: #123b30;
 
     object-fit: contain;
 
     pointer-events: none;
     -webkit-user-drag: none;
+}
+
+#seraf-bot-panel .mini-logo.inactive {
+    background-color: #3b2024;
 }
 
 #seraf-bot-panel.is-minimized{
