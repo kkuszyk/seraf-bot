@@ -497,8 +497,8 @@
 
     position: relative;
 
-    width: 64px;
-    height: 64px;
+    width: 74px;
+    height: 74px;
 
     border: 1px solid #293547;
     border-radius: 12px;
@@ -530,8 +530,8 @@
 }
 
 #seraf-bot-panel.is-minimized{
-    width: 64px;
-    height: 64px;
+    width: 74px;
+    height: 74px;
 }
 
 #seraf-bot-panel.is-minimized .app {

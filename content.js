@@ -146,7 +146,7 @@ async function togglePanel() {
     miniPower.addEventListener("click", (event) => {
         event.stopPropagation();
 
-        toggleMiniPin(miniPower);
+        toggleMiniPower(miniPower);
         }
     );
 
