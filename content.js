@@ -70,9 +70,6 @@ async function togglePanel() {
     );
 
 
-    const statusIcon = app.querySelector(".status-icon img");
-    statusIcon.src = chrome.runtime.getURL("images/icon-active.png");
-
     const miniLogo = miniPanel.querySelector(".mini-logo");
     miniLogo.src = chrome.runtime.getURL("logo.png");
 
@@ -119,7 +116,7 @@ async function togglePanel() {
 
     restorePinnedState(miniPanel, miniPin);
 
-    restorePowerState(miniPower);
+    restorePowerState(panel);
 
 
     minimizeButton.addEventListener("click", () => {
@@ -182,7 +179,7 @@ async function togglePanel() {
     miniPower.addEventListener("click", (event) => {
         event.stopPropagation();
 
-        toggleMiniPower(miniPower);
+        toggleMiniPower(panel);
         }
     );
 
@@ -194,17 +191,69 @@ async function togglePanel() {
 }
 
 
-function toggleMiniPower(miniPower) {
-    const isActive = miniPower.classList.toggle("active");
+function updateBotUI(panel, isActive) {
+    const miniPower = panel.querySelector(".mini-power");
 
-    localStorage.setItem(
-        BOT_ACTIVE_KEY,
-        JSON.stringify(isActive)
+    const statusText = panel.querySelector(".status-text");
+
+    const statusState = panel.querySelector(".status-active");
+
+    const statusIcon = panel.querySelector(".status-icon img");
+
+
+    miniPower.classList.toggle(
+        "active",
+        isActive
+    );
+
+
+    statusText.textContent =
+        isActive
+            ? "Aktywny"
+            : "Nieaktywny";
+    
+
+    statusState.classList.toggle(
+        "inactive",
+        !isActive
+    );
+
+
+    statusIcon.src = chrome.runtime.getURL(
+        isActive
+            ? "images/icon-active.png"
+            : "images/icon-inactive.png"
     );
 }
 
 
-function restorePowerState(miniPower) {
+function toggleMiniPower(miniPower) {
+    const savedState = localStorage.getItem(BOT_ACTIVE_KEY);
+
+
+    const currentState =
+        savedState === null
+            ? true
+            : JSON.parse(savedState);
+    
+
+    const newState = !currentState;
+
+
+    localStorage.setItem(
+        BOT_ACTIVE_KEY,
+        JSON.stringify(newState)
+    );
+
+
+    updateBotUI(
+        panel,
+        newState
+    );
+}
+
+
+function restorePowerState(panel) {
     const savedState = localStorage.getItem(
         BOT_ACTIVE_KEY
     );
@@ -214,8 +263,9 @@ function restorePowerState(miniPower) {
         ? true
         : JSON.parse(savedState);
     
-    miniPower.classList.toggle(
-        "active",
+    
+    updateBotUI(
+        panel,
         isActive
     );
 }

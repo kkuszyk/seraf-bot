@@ -274,6 +274,10 @@
     font-weight: bold;
 }
 
+#seraf-bot-panel .status-active.inactive {
+    color: #9daabe;
+}
+
 #seraf-bot-panel .status-dot {
     width: 7px;
     height: 7px;
@@ -283,6 +287,10 @@
     border-radius: 50%;
 
     background-color: #35d483;
+}
+
+#seraf-bot-panel .status-active.inactive .status-dot {
+    background-color: #6f7c90;
 }
 
 #seraf-bot-panel .status-info p {
