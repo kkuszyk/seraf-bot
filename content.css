@@ -20,6 +20,23 @@
 
     width: 100%;
     height: 100%;
+
+
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+#seraf-bot-panel.is-opening .app {
+    opacity: 0;
+
+    transform:
+        translateY(20px)
+        scale(0.95);
 }
 
 
@@ -511,6 +528,23 @@
 
     cursor: move;
     user-select: none;
+
+
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+#seraf-bot-panel.is-opening .mini-panel {
+    opacity: 0;
+
+    transform:
+        translateY(20px)
+        scale(0.95);
 }
 
 #seraf-bot-panel .mini-logo {
@@ -599,4 +633,43 @@
 
     background-color: #163128;
     color: #35d483;
+}
+
+
+/* PANEL ANIMATIONS */
+
+@keyframes seraf-panel-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes seraf-panel-exit {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+}
+
+#seraf-bot-panel .seraf-enter {
+    animation:
+        seraf-panel-exit
+        0.22s
+        ease
+        forwards;
+}
+
+#seraf-bot-panel.is-transitioning {
+    pointer-events: none;
 }

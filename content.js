@@ -43,6 +43,10 @@ async function togglePanel() {
     const panel = document.createElement("div");
     panel.id = "seraf-bot-panel";
 
+    panel.classList.add(
+        "is-opening"
+    );
+
 
     const response = await fetch(
         chrome.runtime.getURL("popup.html")
@@ -90,6 +94,25 @@ async function togglePanel() {
 
 
     restorePanelViewState(panel);
+
+
+    const visiblePanel =
+        panel.classList.contains("is-minimized")
+            ? miniPanel
+            : app;
+    
+
+    playPanelAnimation(
+        visiblePanel,
+        "seraf-enter"
+    );
+
+
+    requestAnimationFrame(() => {
+        panel.classList.remove(
+            "is-opening"
+        );
+    });
 
 
     const header = panel.querySelector(".header");
@@ -242,10 +265,58 @@ function restorePanelViewState(panel) {
 }
 
 
-function minimizePanel(panel) {
+function playPanelAnimation(
+    element,
+    animationClass
+) {
+    return new Promise((resolve) => {
+
+        element.addEventListener("animationend", () => {
+            element.classList.remove(animationClass);
+
+            resolve();
+        },
+        {
+            once: true
+        }
+    );
+
+    element.classList.add(animationClass);
+    });
+}
+
+
+async function minimizePanel(panel) {
+    if (
+        panel.classList.contains("is-transitioning")
+    ) {
+        return;
+    }
+
+
+    panel.classList.add("is-transitioning");
+
+
+    const app = panel.querySelector(".app");
+
+    const miniPanel = panel.querySelector(".mini-panel");
+
+
     saveCurrentPosition(
         panel,
         PANEL_POSITION_KEY
+    );
+
+
+    restorePosition(
+        panel,
+        PANEL_POSITION_KEY
+    );
+
+
+    await playPanelAnimation(
+        app,
+        "seraf-exit"
     );
 
 
@@ -258,9 +329,11 @@ function minimizePanel(panel) {
     );
 
 
-    const savedMiniPosition = localStorage.getItem(
-        MINI_POSITION_KEY
-    );
+    const savedMiniPosition =
+        localStorage.getItem(
+            MINI_POSITION_KEY
+        );
+    
 
     if (savedMiniPosition) {
         restorePosition(
@@ -268,13 +341,43 @@ function minimizePanel(panel) {
             MINI_POSITION_KEY
         );
     }
+
+
+    await playPanelAnimation(
+        miniPanel,
+        "seraf-enter"
+    );
+
+
+    panel.classList.remove("is-transitioning");
 }
 
 
-function restoreFullPanel(panel) {
+async function restoreFullPanel(panel) {
+    if (
+        panel.classList.contains("is-transitioning")
+    ) {
+        return;
+    }
+
+
+    panel.classList.add("is-transitioning");
+
+
+    const app = panel.querySelector(".app");
+
+    const miniPanel = panel.querySelector(".mini-panel");
+
+
     saveCurrentPosition(
         panel,
         MINI_POSITION_KEY
+    );
+
+
+    await playPanelAnimation(
+        miniPanel,
+        "seraf-exit"
     );
 
 
@@ -291,6 +394,15 @@ function restoreFullPanel(panel) {
         panel,
         PANEL_POSITION_KEY
     );
+
+
+    await playPanelAnimation(
+        app,
+        "seraf-enter"
+    );
+
+
+    panel.classList.remove("is-transitioning");
 }
 
 
@@ -392,12 +504,15 @@ function keepPanelInsideViewport(panel) {
 }
 
 
-function removePanel(panel) {
-    dragCleanups.forEach(
-        (cleanup) => cleanup()
-    );
+async function removePanel(panel) {
+    if (
+        panel.classList.contains("is-transitioning")
+    ) {
+        return;
+    }
 
-    dragCleanups = [];
+
+    panel.classList.add("is-transitioning");
 
 
     localStorage.setItem(
@@ -405,7 +520,25 @@ function removePanel(panel) {
         JSON.stringify(false)
     );
 
+
+    const visiblePanel = panel.classList.contains("is-minimized")
+        ? panel.querySelector(".mini-panel")
+        : panel.querySelector(".app");
     
+    
+    await playPanelAnimation(
+        visiblePanel,
+        "seraf-exit"
+    );
+
+
+    dragCleanups.forEach(
+        (cleanup) => cleanup()
+    );
+
+    dragCleanups = [];
+
+
     panel.remove();
 }
 
