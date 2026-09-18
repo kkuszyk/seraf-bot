@@ -508,6 +508,25 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 
     overflow: hidden;
+
+    cursor: move;
+    user-select: none;
+}
+
+#seraf-bot-panel .mini-logo {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 34px;
+    height: 34px;
+
+    object-fit: contain;
+
+    pointer-events: none;
+    -webkit-user-drag: none;
 }
 
 #seraf-bot-panel.is-minimized{
@@ -523,35 +542,10 @@
     display: block;
 }
 
-#seraf-bot-panel .mini-restore {
-    width: 100%;
-    height: 100%;
-
-    padding: 10px;
-
-    border: none;
-
-    background-color: transparent;
-
-    cursor: move;
-}
-
-#seraf-bot-panel .mini-restore img {
-    width: 40px;
-    height: 40px;
-
-    display: block;
-
-    object-fit: contain;
-
-    margin: auto;
-}
-
-#seraf-bot-panel .mini-pin {
+#seraf-bot-panel .mini-pin,
+#seraf-bot-panel .mini-power,
+#seraf-bot-panel .mini-maximize {
     position: absolute;
-
-    top: 3px;
-    right: 3px;
 
     width: 20px;
     height: 20px;
@@ -568,7 +562,24 @@
     background-color: #19212d;
     color: #aebbd0;
 
+    font-size: 12px;
+
     cursor: pointer;
+}
+
+#seraf-bot-panel .mini-pin {
+    top: 3px;
+    right: 3px;
+}
+
+#seraf-bot-panel .mini-power {
+    bottom: 3px;
+    left: 3px;
+}
+
+#seraf-bot-panel .mini-maximize {
+    bottom: 3px;
+    right: 3px;
 }
 
 #seraf-bot-panel .mini-pin svg {
@@ -576,17 +587,16 @@
     height: 12px;
 }
 
-#seraf-bot-panel .mini-pin:hover {
+#seraf-bot-panel .mini-pin:hover,
+#seraf-bot-panel .mini-power:hover,
+#seraf-bot-panel .mini-maximize:hover {
     color: white;
 }
 
-#seraf-bot-panel .mini-pin.active {
+#seraf-bot-panel .mini-pin.active,
+#seraf-bot-panel .mini-power.active {
     border-color: #35d483;
 
     background-color: #163128;
     color: #35d483;
-}
-
-#seraf-bot-panel .mini-panel.is-pinned .mini-restore {
-    cursor: pointer;
 }

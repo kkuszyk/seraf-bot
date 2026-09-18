@@ -5,6 +5,7 @@
     "description": "Our own browser extension for finding heroes.",
     "action": {},
     "background": {
+        "scripts": ["background.js"],
         "service_worker": "background.js"
     },
     "content_scripts": [

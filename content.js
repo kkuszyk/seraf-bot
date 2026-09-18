@@ -1,6 +1,7 @@
 const PANEL_POSITION_KEY = "seraf-bot-panel-position";
 const MINI_POSITION_KEY = "seraf-bot-mini-position";
 const MINI_PINNED_KEY = "seraf-bot-mini-pinned";
+const BOT_ACTIVE_KEY = "seraf-bot-active";
 
 let dragCleanups = [];
 
@@ -54,7 +55,7 @@ async function togglePanel() {
     const statusIcon = app.querySelector(".status-icon img");
     statusIcon.src = chrome.runtime.getURL("images/icon-active.png");
 
-    const miniLogo = miniPanel.querySelector(".mini-restore img");
+    const miniLogo = miniPanel.querySelector(".mini-logo");
     miniLogo.src = chrome.runtime.getURL("logo.png");
 
 
@@ -73,12 +74,16 @@ async function togglePanel() {
 
     const closeButton = panel.querySelector(".close-button");
 
-    const miniRestore = panel.querySelector(".mini-restore");
-
     const miniPin = panel.querySelector(".mini-pin");
+
+    const miniPower = panel.querySelector(".mini-power");
+    
+    const miniMaximize = panel.querySelector(".mini-maximize");
 
 
     restorePinnedState(miniPanel, miniPin);
+
+    restorePowerState(miniPower);
 
 
     minimizeButton.addEventListener("click", () => {
@@ -105,30 +110,16 @@ async function togglePanel() {
 
     const miniDrag = enablePanelDragging(
         panel,
-        miniRestore,
+        miniPanel,
         MINI_POSITION_KEY,
         {
+            ignoreSelector: "button",
+
             canDrag: () => {
                 return !miniPanel.classList.contains(
                     "is-pinned"
                 );
             }
-        }
-    );
-
-
-    miniRestore.addEventListener("click", () => {
-        if (miniDrag.consumeDragged()) {
-            return;
-        }
-
-        restoreFullPanel(panel);
-        }
-    );
-
-
-    miniPin.addEventListener("mousedown", (event) => {
-        event.stopPropagation();
         }
     );
 
@@ -144,9 +135,52 @@ async function togglePanel() {
     );
 
 
+    miniMaximize.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        restoreFullPanel(panel);
+        }
+    );
+
+
+    miniPower.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        toggleMiniPin(miniPower);
+        }
+    );
+
+
     dragCleanups.push(
         headerDrag.cleanup,
         miniDrag.cleanup
+    );
+}
+
+
+function toggleMiniPower(miniPower) {
+    const isActive = miniPower.classList.toggle("active");
+
+    localStorage.setItem(
+        BOT_ACTIVE_KEY,
+        JSON.stringify(isActive)
+    );
+}
+
+
+function restorePowerState(miniPower) {
+    const savedState = localStorage.getItem(
+        BOT_ACTIVE_KEY
+    );
+
+    const isActive =
+        savedState === null
+        ? true
+        : JSON.parse(savedState);
+    
+    miniPower.classList.toggle(
+        "active",
+        isActive
     );
 }
 
