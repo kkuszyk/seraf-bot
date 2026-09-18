@@ -2,6 +2,9 @@ const PANEL_POSITION_KEY = "seraf-bot-panel-position";
 const MINI_POSITION_KEY = "seraf-bot-mini-position";
 const MINI_PINNED_KEY = "seraf-bot-mini-pinned";
 const BOT_ACTIVE_KEY = "seraf-bot-active";
+const PANEL_MINIMIZED_KEY = "seraf-bot-panel-minimized";
+const PANEL_VISIBLE_KEY = "seraf-bot-panel-visible";
+
 
 let dragCleanups = [];
 
@@ -11,6 +14,21 @@ chrome.runtime.onMessage.addListener((message) => {
         togglePanel();
     }
 });
+
+
+restorePanelVisibility();
+
+
+function restorePanelVisibility() {
+    const savedVisibility = localStorage.getItem(
+        PANEL_VISIBLE_KEY
+    );
+
+
+    if (savedVisibility === "true") {
+        togglePanel();
+    }
+}
 
 
 async function togglePanel() {
@@ -65,7 +83,13 @@ async function togglePanel() {
     document.body.appendChild(panel);
 
 
-    restorePosition(panel, PANEL_POSITION_KEY);
+    localStorage.setItem(
+        PANEL_VISIBLE_KEY,
+        JSON.stringify(true)
+    );
+
+
+    restorePanelViewState(panel);
 
 
     const header = panel.querySelector(".header");
@@ -185,6 +209,39 @@ function restorePowerState(miniPower) {
 }
 
 
+function restorePanelViewState(panel) {
+    const savedState = localStorage.getItem(
+        PANEL_MINIMIZED_KEY
+    );
+
+
+    const isMinimized =
+        savedState === null
+        ? false
+        : JSON.parse(savedState);
+    
+
+    if (isMinimized) {
+        panel.classList.add(
+            "is-minimized"
+        );
+
+        restorePosition(
+            panel,
+            MINI_POSITION_KEY
+        );
+
+        return;
+    }
+
+
+    restorePosition(
+        panel,
+        PANEL_POSITION_KEY
+    );
+}
+
+
 function minimizePanel(panel) {
     saveCurrentPosition(
         panel,
@@ -193,6 +250,12 @@ function minimizePanel(panel) {
 
 
     panel.classList.add("is-minimized");
+
+
+    localStorage.setItem(
+        PANEL_MINIMIZED_KEY,
+        JSON.stringify(true)
+    );
 
 
     const savedMiniPosition = localStorage.getItem(
@@ -216,6 +279,12 @@ function restoreFullPanel(panel) {
 
 
     panel.classList.remove("is-minimized");
+
+
+    localStorage.setItem(
+        PANEL_MINIMIZED_KEY,
+        JSON.stringify(false)
+    );
 
 
     restorePosition(
@@ -296,6 +365,33 @@ function restorePosition(panel, positionKey) {
 }
 
 
+function keepPanelInsideViewport(panel) {
+    const position = panel.getBoundingClientRect();
+
+
+    const maxLeft = Math.max(window.innerWidth - panel.offsetWidth, 0);
+
+    const maxTop = Math.max(window.innerHeight - panel.offsetHeight, 0);
+
+
+    const boundedLeft = Math.min(
+        Math.max(position.left, 0),
+        maxLeft
+    );
+
+    const boundedTop = Math.min(
+        Math.max(position.top, 0),
+        maxTop
+    );
+
+
+    panel.style.left = `${boundedLeft}px`;
+    panel.style.top = `${boundedTop}px`;
+
+    panel.style.transform = "none";
+}
+
+
 function removePanel(panel) {
     dragCleanups.forEach(
         (cleanup) => cleanup()
@@ -303,6 +399,13 @@ function removePanel(panel) {
 
     dragCleanups = [];
 
+
+    localStorage.setItem(
+        PANEL_VISIBLE_KEY,
+        JSON.stringify(false)
+    );
+
+    
     panel.remove();
 }
 
@@ -397,9 +500,30 @@ function enablePanelDragging(
         }
 
 
-        panel.style.left = `${event.clientX - offsetX}px`;
+        const newLeft = event.clientX - offsetX;
 
-        panel.style.top = `${event.clientY - offsetY}px`;
+        const newTop = event.clientY - offsetY;
+
+
+        const maxLeft = window.innerWidth - panel.offsetWidth;
+        
+        const maxTop = window.innerHeight - panel.offsetHeight;
+
+
+        const boundedLeft = Math.min(
+            Math.max(newLeft, 0),
+            Math.max(maxLeft, 0)
+        );
+
+        const boundedTop = Math.min(
+            Math.max(newTop, 0),
+            Math.max(maxTop, 0)
+        );
+
+
+        panel.style.left = `${boundedLeft}px`;
+
+        panel.style.top = `${boundedTop}px`;
     }
 
 
