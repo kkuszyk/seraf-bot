@@ -43,10 +43,6 @@ async function togglePanel() {
     const panel = document.createElement("div");
     panel.id = "seraf-bot-panel";
 
-    panel.classList.add(
-        "is-opening"
-    );
-
 
     const response = await fetch(
         chrome.runtime.getURL("popup.html")
@@ -106,13 +102,6 @@ async function togglePanel() {
         visiblePanel,
         "seraf-enter"
     );
-
-
-    requestAnimationFrame(() => {
-        panel.classList.remove(
-            "is-opening"
-        );
-    });
 
 
     const header = panel.querySelector(".header");
@@ -474,6 +463,8 @@ function restorePosition(panel, positionKey) {
     panel.style.top = `${position.top}px`;
 
     panel.style.transform = "none";
+
+    keepPanelInsideViewport(panel);
 }
 
 
