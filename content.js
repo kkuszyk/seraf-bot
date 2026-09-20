@@ -113,6 +113,8 @@ async function togglePanel() {
     
     const miniMaximize = panel.querySelector(".mini-maximize");
 
+    const tabButtons = panel.querySelectorAll(".sidebar button[data-tab]");
+
 
     restorePinnedState(miniPanel, miniPin);
 
@@ -138,6 +140,15 @@ async function togglePanel() {
 
     stopButton.addEventListener("click", () => {
         stopBot(panel);
+    });
+
+    tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            switchPanelTab(
+                panel,
+                button.dataset.tab
+            );
+        });
     });
 
 
@@ -198,6 +209,29 @@ async function togglePanel() {
         headerDrag.cleanup,
         miniDrag.cleanup
     );
+}
+
+
+function switchPanelTab(panel, tabName) {
+    const tabButtons = panel.querySelectorAll(".sidebar button[data-tab]");
+
+    const tabContents = panel.querySelectorAll(".tab-content");
+
+
+    tabButtons.forEach((button) => {
+        button.classList.toggle(
+            "active",
+            button.dataset.tab === tabName
+        );
+    });
+
+
+    tabContents.forEach((content) => {
+        content.classList.toggle(
+            "active",
+            content.dataset.content === tabName
+        );
+    });
 }
 
 

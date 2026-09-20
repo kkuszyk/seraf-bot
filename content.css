@@ -214,6 +214,61 @@
     margin-top: 0;
 }
 
+#seraf-bot-panel .tab-content {
+    display: none;
+}
+
+#seraf-bot-panel .tab-content.active {
+    display: block;
+}
+
+#seraf-bot-panel .settings-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+#seraf-bot-panel .settings-heading-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid #245c4a;
+    border-radius: 50%;
+
+    background-color: #123b30;
+    color: #35d483;
+}
+
+#seraf-bot-panel .settings-heading-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+#seraf-bot-panel .settings-heading-text h2 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 21px;
+}
+
+#seraf-bot-panel .settings-heading-text p {
+    margin: 5px 0 0;
+
+    color: #9daabe;
+
+    font-size: 12px;
+}
+
 
 /* BOT STATUS */
 
