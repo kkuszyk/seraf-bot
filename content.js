@@ -285,7 +285,7 @@ function updateBotUI(panel, status) {
 
         statusDescription.textContent = "Bot działa prawidłowo. Wykonuje aktualne zadania.";
 
-        mainPowerButton.textContent = "Wstrzymaj"
+        mainPowerButton.textContent = "Wstrzymaj";
     }
 
     else if (isPaused) {
@@ -380,7 +380,7 @@ function stopBot(panel) {
 }
 
 
-function restorePowerStatus(panel) {
+function restoreBotStatus(panel) {
     const savedStatus = getBotStatus();
 
 
