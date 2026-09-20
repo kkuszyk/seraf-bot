@@ -201,7 +201,7 @@ async function togglePanel() {
 }
 
 
-function updateBotUI(panel, isActive) {
+function updateBotUI(panel, status) {
     const miniPower = panel.querySelector(".mini-power");
 
     const miniLogo = panel.querySelector(".mini-logo");
@@ -236,7 +236,7 @@ function updateBotUI(panel, isActive) {
 
     miniPower.classList.toggle(
         "stopped",
-        isPaused
+        isStopped
     );
 
     miniLogo.classList.toggle(
@@ -341,6 +341,21 @@ function getBotStatus() {
 }
 
 
+function toggleBotState(panel) {
+    const currentStatus = getBotStatus();
+
+
+    if (currentStatus === "running") {
+        pauseBot(panel);
+
+        return;
+    }
+
+
+    startBot(panel);
+}
+
+
 function startBot(panel) {
     setBotStatus(
         panel,
@@ -365,7 +380,7 @@ function stopBot(panel) {
 }
 
 
-function restorePowerState(panel) {
+function restorePowerStatus(panel) {
     const savedStatus = getBotStatus();
 
 
