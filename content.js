@@ -1,7 +1,7 @@
 const PANEL_POSITION_KEY = "seraf-bot-panel-position";
 const MINI_POSITION_KEY = "seraf-bot-mini-position";
 const MINI_PINNED_KEY = "seraf-bot-mini-pinned";
-const BOT_ACTIVE_KEY = "seraf-bot-active";
+const BOT_STATUS_KEY = "seraf-bot-status";
 const PANEL_MINIMIZED_KEY = "seraf-bot-panel-minimized";
 const PANEL_VISIBLE_KEY = "seraf-bot-panel-visible";
 
@@ -70,13 +70,6 @@ async function togglePanel() {
     );
 
 
-    const statusIcon = app.querySelector(".status-icon img");
-    statusIcon.src = chrome.runtime.getURL("images/icon-active.png");
-
-    const miniLogo = miniPanel.querySelector(".mini-logo");
-    miniLogo.src = chrome.runtime.getURL("logo.png");
-
-
     panel.appendChild(app);
     panel.appendChild(miniPanel);
 
@@ -92,11 +85,27 @@ async function togglePanel() {
     restorePanelViewState(panel);
 
 
+    const visiblePanel =
+        panel.classList.contains("is-minimized")
+            ? miniPanel
+            : app;
+    
+
+    playPanelAnimation(
+        visiblePanel,
+        "seraf-enter"
+    );
+
+
     const header = panel.querySelector(".header");
 
     const minimizeButton = panel.querySelector(".minimize-button");
 
     const closeButton = panel.querySelector(".close-button");
+
+    const mainPowerButton = panel.querySelector(".pause-button");
+
+    const stopButton = panel.querySelector(".stop-button");
 
     const miniPin = panel.querySelector(".mini-pin");
 
@@ -107,7 +116,7 @@ async function togglePanel() {
 
     restorePinnedState(miniPanel, miniPin);
 
-    restorePowerState(miniPower);
+    restoreBotStatus(panel);
 
 
     minimizeButton.addEventListener("click", () => {
@@ -120,6 +129,16 @@ async function togglePanel() {
         removePanel(panel);
         }
     );
+
+
+    mainPowerButton.addEventListener("click", () => {
+        toggleBotState(panel);
+    });
+
+
+    stopButton.addEventListener("click", () => {
+        stopBot(panel);
+    });
 
 
     const headerDrag = enablePanelDragging(
@@ -170,7 +189,7 @@ async function togglePanel() {
     miniPower.addEventListener("click", (event) => {
         event.stopPropagation();
 
-        toggleMiniPower(miniPower);
+        toggleBotState(panel);
         }
     );
 
@@ -182,29 +201,192 @@ async function togglePanel() {
 }
 
 
-function toggleMiniPower(miniPower) {
-    const isActive = miniPower.classList.toggle("active");
+function updateBotUI(panel, status) {
+    const miniPower = panel.querySelector(".mini-power");
 
+    const miniLogo = panel.querySelector(".mini-logo");
+
+    const statusText = panel.querySelector(".status-text");
+
+    const statusState = panel.querySelector(".status-active");
+
+    const statusIcon = panel.querySelector(".status-icon img");
+
+    const botStatus = panel.querySelector(".bot-status");
+
+    const mainPowerButton = panel.querySelector(".pause-button");
+
+    const statusDescription = panel.querySelector(".status-description");
+
+
+    const isRunning = status === "running";
+    const isPaused = status === "paused";
+    const isStopped = status === "stopped";
+
+
+    miniPower.classList.toggle(
+        "active",
+        isRunning
+    );
+
+    miniPower.classList.toggle(
+        "paused",
+        isPaused
+    );
+
+    miniPower.classList.toggle(
+        "stopped",
+        isStopped
+    );
+
+    miniLogo.classList.toggle(
+        "paused",
+        isPaused
+    );
+
+    miniLogo.classList.toggle(
+        "stopped",
+        isStopped
+    );
+
+    statusState.classList.toggle(
+        "paused",
+        isPaused
+    );
+
+    statusState.classList.toggle(
+        "stopped",
+        isStopped
+    );
+
+    botStatus.classList.toggle(
+        "paused",
+        isPaused
+    );
+
+    botStatus.classList.toggle(
+        "stopped",
+        isStopped
+    );
+
+    mainPowerButton.classList.toggle(
+        "paused",
+        isPaused
+    );
+
+    mainPowerButton.classList.toggle(
+        "stopped",
+        isStopped
+    );
+
+
+    if (isRunning) {
+        statusText.textContent = "Aktywny";
+
+        statusDescription.textContent = "Bot działa prawidłowo. Wykonuje aktualne zadania.";
+
+        mainPowerButton.textContent = "Wstrzymaj";
+    }
+
+    else if (isPaused) {
+        statusText.textContent = "Wstrzymany";
+
+        statusDescription.textContent = "Bot jest obecnie wstrzymany.";
+
+        mainPowerButton.textContent = "Uruchom";
+    }
+
+    else {
+        statusText.textContent = "Zatrzymany";
+
+        statusDescription.textContent = "Bot został całkowicie zatrzymany.";
+
+        mainPowerButton.textContent = "Uruchom";
+    }
+
+
+    const iconPath =
+        isRunning
+        ? "images/icon-active.png"
+        : "images/icon-inactive.png";
+    
+
+    statusIcon.src = chrome.runtime.getURL(iconPath);
+
+    miniLogo.src = chrome.runtime.getURL(iconPath);
+}
+
+
+function setBotStatus(panel, status) {
     localStorage.setItem(
-        BOT_ACTIVE_KEY,
-        JSON.stringify(isActive)
+        BOT_STATUS_KEY,
+        status
+    );
+
+
+    updateBotUI(
+        panel,
+        status
     );
 }
 
 
-function restorePowerState(miniPower) {
-    const savedState = localStorage.getItem(
-        BOT_ACTIVE_KEY
-    );
+function getBotStatus() {
+    const savedStatus = localStorage.getItem(BOT_STATUS_KEY);
 
-    const isActive =
-        savedState === null
-        ? true
-        : JSON.parse(savedState);
-    
-    miniPower.classList.toggle(
-        "active",
-        isActive
+
+    return savedStatus === null
+        ? "running"
+        : savedStatus;
+}
+
+
+function toggleBotState(panel) {
+    const currentStatus = getBotStatus();
+
+
+    if (currentStatus === "running") {
+        pauseBot(panel);
+
+        return;
+    }
+
+
+    startBot(panel);
+}
+
+
+function startBot(panel) {
+    setBotStatus(
+        panel,
+        "running"
+    );
+}
+
+
+function pauseBot(panel) {
+    setBotStatus(
+        panel,
+        "paused"
+    );
+}
+
+
+function stopBot(panel) {
+    setBotStatus(
+        panel,
+        "stopped"
+    );
+}
+
+
+function restoreBotStatus(panel) {
+    const savedStatus = getBotStatus();
+
+
+    updateBotUI(
+        panel,
+        savedStatus
     );
 }
 
@@ -242,10 +424,58 @@ function restorePanelViewState(panel) {
 }
 
 
-function minimizePanel(panel) {
+function playPanelAnimation(
+    element,
+    animationClass
+) {
+    return new Promise((resolve) => {
+
+        element.addEventListener("animationend", () => {
+            element.classList.remove(animationClass);
+
+            resolve();
+        },
+        {
+            once: true
+        }
+    );
+
+    element.classList.add(animationClass);
+    });
+}
+
+
+async function minimizePanel(panel) {
+    if (
+        panel.classList.contains("is-transitioning")
+    ) {
+        return;
+    }
+
+
+    panel.classList.add("is-transitioning");
+
+
+    const app = panel.querySelector(".app");
+
+    const miniPanel = panel.querySelector(".mini-panel");
+
+
     saveCurrentPosition(
         panel,
         PANEL_POSITION_KEY
+    );
+
+
+    restorePosition(
+        panel,
+        PANEL_POSITION_KEY
+    );
+
+
+    await playPanelAnimation(
+        app,
+        "seraf-exit"
     );
 
 
@@ -258,9 +488,11 @@ function minimizePanel(panel) {
     );
 
 
-    const savedMiniPosition = localStorage.getItem(
-        MINI_POSITION_KEY
-    );
+    const savedMiniPosition =
+        localStorage.getItem(
+            MINI_POSITION_KEY
+        );
+    
 
     if (savedMiniPosition) {
         restorePosition(
@@ -268,13 +500,43 @@ function minimizePanel(panel) {
             MINI_POSITION_KEY
         );
     }
+
+
+    await playPanelAnimation(
+        miniPanel,
+        "seraf-enter"
+    );
+
+
+    panel.classList.remove("is-transitioning");
 }
 
 
-function restoreFullPanel(panel) {
+async function restoreFullPanel(panel) {
+    if (
+        panel.classList.contains("is-transitioning")
+    ) {
+        return;
+    }
+
+
+    panel.classList.add("is-transitioning");
+
+
+    const app = panel.querySelector(".app");
+
+    const miniPanel = panel.querySelector(".mini-panel");
+
+
     saveCurrentPosition(
         panel,
         MINI_POSITION_KEY
+    );
+
+
+    await playPanelAnimation(
+        miniPanel,
+        "seraf-exit"
     );
 
 
@@ -291,6 +553,15 @@ function restoreFullPanel(panel) {
         panel,
         PANEL_POSITION_KEY
     );
+
+
+    await playPanelAnimation(
+        app,
+        "seraf-enter"
+    );
+
+
+    panel.classList.remove("is-transitioning");
 }
 
 
@@ -362,6 +633,8 @@ function restorePosition(panel, positionKey) {
     panel.style.top = `${position.top}px`;
 
     panel.style.transform = "none";
+
+    keepPanelInsideViewport(panel);
 }
 
 
@@ -392,12 +665,15 @@ function keepPanelInsideViewport(panel) {
 }
 
 
-function removePanel(panel) {
-    dragCleanups.forEach(
-        (cleanup) => cleanup()
-    );
+async function removePanel(panel) {
+    if (
+        panel.classList.contains("is-transitioning")
+    ) {
+        return;
+    }
 
-    dragCleanups = [];
+
+    panel.classList.add("is-transitioning");
 
 
     localStorage.setItem(
@@ -405,7 +681,25 @@ function removePanel(panel) {
         JSON.stringify(false)
     );
 
+
+    const visiblePanel = panel.classList.contains("is-minimized")
+        ? panel.querySelector(".mini-panel")
+        : panel.querySelector(".app");
     
+    
+    await playPanelAnimation(
+        visiblePanel,
+        "seraf-exit"
+    );
+
+
+    dragCleanups.forEach(
+        (cleanup) => cleanup()
+    );
+
+    dragCleanups = [];
+
+
     panel.remove();
 }
 

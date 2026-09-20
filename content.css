@@ -229,6 +229,24 @@
     background-color: #10231f;
 }
 
+#seraf-bot-panel .bot-status.paused {
+    border-color: #76591f;
+    background-color: #261f12;
+}
+
+#seraf-bot-panel .bot-status.paused .status-icon {
+    background-color: #3a2e14;
+}
+
+#seraf-bot-panel .bot-status.stopped {
+    border-color: #633a3f;
+    background-color: #251719;
+}
+
+#seraf-bot-panel .bot-status.stopped .status-icon {
+    background-color: #3b2024;
+}
+
 #seraf-bot-panel .status-icon {
     width: 60px;
     height: 60px;
@@ -274,6 +292,14 @@
     font-weight: bold;
 }
 
+#seraf-bot-panel .status-active.paused {
+    color: #d6a23c;
+}
+
+#seraf-bot-panel .status-active.stopped {
+    color: #c85a64;
+}
+
 #seraf-bot-panel .status-dot {
     width: 7px;
     height: 7px;
@@ -285,10 +311,22 @@
     background-color: #35d483;
 }
 
+#seraf-bot-panel .status-active.paused .status-dot {
+    background-color: #d6a23c;
+}
+
+#seraf-bot-panel .status-active.stopped .status-dot {
+    background-color: #c85a64;
+}
+
 #seraf-bot-panel .status-info p {
+    min-height: 34px;
+
     margin: 10px 0 0 0;
 
     color: #9daabe;
+
+    line-height: 17px;
 }
 
 #seraf-bot-panel .status-actions {
@@ -308,18 +346,69 @@
     cursor: pointer;
 }
 
-#seraf-bot-panel .pause-button {
-    border: none;
+#seraf-bot-panel .pause-button,
+#seraf-bot-panel .stop-button {
+    width: 130px;
+    height: 44px;
 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 16px;
+
+    border: 1px solid transparent;
+
+    white-space: nowrap;
+
+    box-sizing: border-box;
+    background-clip: padding-box;
+}
+
+#seraf-bot-panel .pause-button {
     background-color: #25b96b;
     color: white;
 }
 
+#seraf-bot-panel .pause-button.paused {
+    background-color: #b98227;
+}
+
+#seraf-bot-panel .pause-button.stopped {
+    background-color: #b84a55;
+}
+
 #seraf-bot-panel .stop-button {
-    border: 1px solid #39465a;
+    border-color: #39465a;
 
     background-color: #19212d;
     color: white;
+}
+
+#seraf-bot-panel .pause-button::before,
+#seraf-bot-panel .stop-button::before {
+    display: inline-block;
+
+    width: 16px;
+
+    flex-shrink: 0;
+
+    text-align: center;
+    line-height: 1;
+}
+
+#seraf-bot-panel .pause-button::before {
+    content: "▶";
+
+    font-size: 15px;
+}
+
+#seraf-bot-panel .stop-button::before {
+    content: "■";
+
+    font-size: 20px;
 }
 
 
@@ -520,13 +609,27 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+
+    padding: 6px;
+
+    border-radius: 50%;
+
+    background-color: #123b30;
 
     object-fit: contain;
 
     pointer-events: none;
     -webkit-user-drag: none;
+}
+
+#seraf-bot-panel .mini-logo.paused {
+    background-color: #3a2d14;
+}
+
+#seraf-bot-panel .mini-logo.stopped {
+    background-color: #3b2024;
 }
 
 #seraf-bot-panel.is-minimized{
@@ -599,4 +702,65 @@
 
     background-color: #163128;
     color: #35d483;
+}
+
+#seraf-bot-panel .mini-power.paused {
+    border-color: #d6a23c;
+
+    background-color: #302612;
+    color: #d6a23c;
+}
+
+#seraf-bot-panel .mini-power.stopped {
+    border-color: #b84a55;
+
+    background-color: #32191d;
+    color: #d86670;
+}
+
+
+/* PANEL ANIMATIONS */
+
+@keyframes seraf-panel-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes seraf-panel-exit {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+}
+
+#seraf-bot-panel .seraf-enter {
+    animation:
+        seraf-panel-enter
+        0.3s
+        ease
+        forwards;
+}
+
+#seraf-bot-panel .seraf-exit {
+    animation:
+        seraf-panel-exit
+        0.22s
+        ease
+        forwards;
+}
+
+#seraf-bot-panel.is-transitioning {
+    pointer-events: none;
 }
