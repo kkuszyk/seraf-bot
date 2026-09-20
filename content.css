@@ -229,12 +229,21 @@
     background-color: #10231f;
 }
 
-#seraf-bot-panel .bot-status.inactive {
+#seraf-bot-panel .bot-status.paused {
+    border-color: #76591f;
+    background-color: #261f12;
+}
+
+#seraf-bot-panel .bot-status.paused .status-icon {
+    background-color: #3a2e14;
+}
+
+#seraf-bot-panel .bot-status.stopped {
     border-color: #633a3f;
     background-color: #251719;
 }
 
-#seraf-bot-panel .bot-status.inactive .status-icon {
+#seraf-bot-panel .bot-status.stopped .status-icon {
     background-color: #3b2024;
 }
 
@@ -283,8 +292,12 @@
     font-weight: bold;
 }
 
-#seraf-bot-panel .status-active.inactive {
-    color: #9daabe;
+#seraf-bot-panel .status-active.paused {
+    color: #d6a23c;
+}
+
+#seraf-bot-panel .status-active.stopped {
+    color: #c85a64;
 }
 
 #seraf-bot-panel .status-dot {
@@ -298,14 +311,22 @@
     background-color: #35d483;
 }
 
-#seraf-bot-panel .status-active.inactive .status-dot {
-    background-color: #6f7c90;
+#seraf-bot-panel .status-active.paused .status-dot {
+    background-color: #d6a23c;
+}
+
+#seraf-bot-panel .status-active.stopped .status-dot {
+    background-color: #c85a64;
 }
 
 #seraf-bot-panel .status-info p {
+    min-height: 34px;
+
     margin: 10px 0 0 0;
 
     color: #9daabe;
+
+    line-height: 17px;
 }
 
 #seraf-bot-panel .status-actions {
@@ -338,24 +359,29 @@
 
     padding: 0 16px;
 
+    border: 1px solid transparent;
+
     white-space: nowrap;
 
     box-sizing: border-box;
+    background-clip: padding-box;
 }
 
 #seraf-bot-panel .pause-button {
-    border: 1px solid transparent;
-
     background-color: #25b96b;
     color: white;
 }
 
-#seraf-bot-panel .pause-button.inactive {
+#seraf-bot-panel .pause-button.paused {
+    background-color: #b98227;
+}
+
+#seraf-bot-panel .pause-button.stopped {
     background-color: #b84a55;
 }
 
 #seraf-bot-panel .stop-button {
-    border: 1px solid #39465a;
+    border-color: #39465a;
 
     background-color: #19212d;
     color: white;
@@ -376,13 +402,13 @@
 #seraf-bot-panel .pause-button::before {
     content: "▶";
 
-    font-size: 18px;
+    font-size: 15px;
 }
 
 #seraf-bot-panel .stop-button::before {
     content: "■";
 
-    font-size: 18px;
+    font-size: 20px;
 }
 
 
@@ -598,7 +624,11 @@
     -webkit-user-drag: none;
 }
 
-#seraf-bot-panel .mini-logo.inactive {
+#seraf-bot-panel .mini-logo.paused {
+    background-color: #3a2d14;
+}
+
+#seraf-bot-panel .mini-logo.stopped {
     background-color: #3b2024;
 }
 
@@ -672,6 +702,20 @@
 
     background-color: #163128;
     color: #35d483;
+}
+
+#seraf-bot-panel .mini-power.paused {
+    border-color: #d6a23c;
+
+    background-color: #302612;
+    color: #d6a23c;
+}
+
+#seraf-bot-panel .mini-power.stopped {
+    border-color: #b84a55;
+
+    background-color: #32191d;
+    color: #d86670;
 }
 
 

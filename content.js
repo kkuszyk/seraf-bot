@@ -1,7 +1,7 @@
 const PANEL_POSITION_KEY = "seraf-bot-panel-position";
 const MINI_POSITION_KEY = "seraf-bot-mini-position";
 const MINI_PINNED_KEY = "seraf-bot-mini-pinned";
-const BOT_ACTIVE_KEY = "seraf-bot-active";
+const BOT_STATUS_KEY = "seraf-bot-status";
 const PANEL_MINIMIZED_KEY = "seraf-bot-panel-minimized";
 const PANEL_VISIBLE_KEY = "seraf-bot-panel-visible";
 
@@ -116,7 +116,7 @@ async function togglePanel() {
 
     restorePinnedState(miniPanel, miniPin);
 
-    restorePowerState(panel);
+    restoreBotStatus(panel);
 
 
     minimizeButton.addEventListener("click", () => {
@@ -216,54 +216,100 @@ function updateBotUI(panel, isActive) {
 
     const mainPowerButton = panel.querySelector(".pause-button");
 
+    const statusDescription = panel.querySelector(".status-description");
+
+
+    const isRunning = status === "running";
+    const isPaused = status === "paused";
+    const isStopped = status === "stopped";
+
 
     miniPower.classList.toggle(
         "active",
-        isActive
+        isRunning
     );
 
+    miniPower.classList.toggle(
+        "paused",
+        isPaused
+    );
+
+    miniPower.classList.toggle(
+        "stopped",
+        isPaused
+    );
 
     miniLogo.classList.toggle(
-        "inactive",
-        !isActive
-    )
+        "paused",
+        isPaused
+    );
 
-
-    statusText.textContent =
-        isActive
-            ? "Aktywny"
-            : "Nieaktywny";
-    
+    miniLogo.classList.toggle(
+        "stopped",
+        isStopped
+    );
 
     statusState.classList.toggle(
-        "inactive",
-        !isActive
+        "paused",
+        isPaused
     );
 
+    statusState.classList.toggle(
+        "stopped",
+        isStopped
+    );
 
     botStatus.classList.toggle(
-        "inactive",
-        !isActive
+        "paused",
+        isPaused
     );
 
+    botStatus.classList.toggle(
+        "stopped",
+        isStopped
+    );
 
     mainPowerButton.classList.toggle(
-        "inactive",
-        !isActive
+        "paused",
+        isPaused
+    );
+
+    mainPowerButton.classList.toggle(
+        "stopped",
+        isStopped
     );
 
 
-    mainPowerButton.textContent =
-        isActive
-            ? "Wstrzymaj"
-            : "Uruchom";
-    
+    if (isRunning) {
+        statusText.textContent = "Aktywny";
+
+        statusDescription.textContent = "Bot działa prawidłowo. Wykonuje aktualne zadania.";
+
+        mainPowerButton.textContent = "Wstrzymaj"
+    }
+
+    else if (isPaused) {
+        statusText.textContent = "Wstrzymany";
+
+        statusDescription.textContent = "Bot jest obecnie wstrzymany.";
+
+        mainPowerButton.textContent = "Uruchom";
+    }
+
+    else {
+        statusText.textContent = "Zatrzymany";
+
+        statusDescription.textContent = "Bot został całkowicie zatrzymany.";
+
+        mainPowerButton.textContent = "Uruchom";
+    }
+
 
     const iconPath =
-        isActive
-            ? "images/icon-active.png"
-            : "images/icon-inactive.png";
-
+        isRunning
+        ? "images/icon-active.png"
+        : "images/icon-inactive.png";
+    
 
     statusIcon.src = chrome.runtime.getURL(iconPath);
 
@@ -271,59 +317,61 @@ function updateBotUI(panel, isActive) {
 }
 
 
-function setBotState(panel, isActive) {
+function setBotStatus(panel, status) {
     localStorage.setItem(
-        BOT_ACTIVE_KEY,
-        JSON.stringify(isActive)
+        BOT_STATUS_KEY,
+        status
     );
 
 
     updateBotUI(
         panel,
-        isActive
+        status
     );
 }
 
 
-function toggleBotState(panel) {
-    const savedState = localStorage.getItem(BOT_ACTIVE_KEY);
+function getBotStatus() {
+    const savedStatus = localStorage.getItem(BOT_STATUS_KEY);
 
 
-    const currentState =
-        savedState === null
-            ? true
-            : JSON.parse(savedState);
-    
+    return savedStatus === null
+        ? "running"
+        : savedStatus;
+}
 
-    setBotState(
+
+function startBot(panel) {
+    setBotStatus(
         panel,
-        !currentState
+        "running"
+    );
+}
+
+
+function pauseBot(panel) {
+    setBotStatus(
+        panel,
+        "paused"
     );
 }
 
 
 function stopBot(panel) {
-    setBotState(
+    setBotStatus(
         panel,
-        false
+        "stopped"
     );
 }
 
 
 function restorePowerState(panel) {
-    const savedState = localStorage.getItem(
-        BOT_ACTIVE_KEY
-    );
+    const savedStatus = getBotStatus();
 
-    const isActive =
-        savedState === null
-        ? true
-        : JSON.parse(savedState);
-    
-    
+
     updateBotUI(
         panel,
-        isActive
+        savedStatus
     );
 }
 
