@@ -115,6 +115,14 @@ async function togglePanel() {
 
     const tabButtons = panel.querySelectorAll(".sidebar button[data-tab]");
 
+    const opacityControl = panel.querySelector(".opacity-control");
+
+    const opacitySelector = panel.querySelector(".opacity-selector");
+
+    const opacityValue = panel.querySelector(".opacity-value");
+    
+    const opacityOptions = panel.querySelectorAll(".opacity-menu button");
+
 
     restorePinnedState(miniPanel, miniPin);
 
@@ -149,6 +157,31 @@ async function togglePanel() {
                 button.dataset.tab
             );
         });
+    });
+
+    opacityOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+            opacityValue.textContent = option.textContent.trim();
+
+
+            opacityControl.classList.remove("open");
+
+
+            opacitySelector.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        });
+    });
+
+    opacitySelector.addEventListener("click", () => {
+        const isOpen = opacityControl.classList.toggle("open");
+
+
+        opacitySelector.setAttribute(
+            "aria-expanded",
+            isOpen
+        );
     });
 
 

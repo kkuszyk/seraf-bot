@@ -269,6 +269,174 @@
     font-size: 12px;
 }
 
+#seraf-bot-panel .settings-card {
+    padding: 18px;
+
+    border: 1px solid #293547;
+    border-radius: 10px;
+
+    background-color: #171f2b;
+}
+
+#seraf-bot-panel .settings-card-header {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+#seraf-bot-panel .settings-card-icon {
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    color: #35d483;
+}
+
+#seraf-bot-panel .settings-card-header h3 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 14px;
+}
+
+#seraf-bot-panel .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #293547;
+}
+
+#seraf-bot-panel .settings-row-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+#seraf-bot-panel .settings-row-title {
+    color: #d6deeb;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#seraf-bot-panel .settings-row-description {
+    color: #8997ab;
+
+    font-size: 11px;
+}
+
+#seraf-bot-panel .opacity-selector {
+    min-width: 92px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 0 12px;
+
+    border: 1px solid #39465a;
+    border-radius: 7px;
+
+    background-color: #19212d;
+    color: #d6deeb;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+#seraf-bot-panel .opacity-selector:hover {
+    border-color: #35d483;
+}
+
+#seraf-bot-panel .opacity-value {
+    font-weight: bold;
+}
+
+#seraf-bot-panel .opacity-arrow {
+    color: #8997ab;
+
+    font-size: 18px;
+    line-height: 1;
+}
+
+#seraf-bot-panel .opacity-control {
+    position: relative;
+
+    flex-shrink: 0;
+}
+
+#seraf-bot-panel .opacity-menu {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    right: 0;
+
+    z-index: 10;
+
+    width: 92px;
+
+    display: none;
+    flex-direction: column;
+
+    padding: 5px;
+
+    border: 1px solid #39465a;
+    border-radius: 7px;
+
+    background-color: #19212d;
+
+    box-sizing: border-box;
+}
+
+#seraf-bot-panel .opacity-control.open .opacity-menu {
+    display: flex;
+}
+
+#seraf-bot-panel .opacity-menu button {
+    width: 100%;
+
+    padding: 7px 10px;
+
+    border: none;
+    border-radius: 5px;
+
+    background-color: transparent;
+    color: #b5c0d4;
+
+    text-align: left;
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+#seraf-bot-panel .opacity-menu button:hover {
+    background-color: #163128;
+    color: #35d483;
+}
+
+#seraf-bot-panel .opacity-control.open .opacity-arrow {
+    transform: rotate(90deg);
+}
+
+#seraf-bot-panel .opacity-arrow {
+    transition: transform 0.15s ease;
+}
+
 
 /* BOT STATUS */
 
