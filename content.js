@@ -4,6 +4,10 @@ const MINI_PINNED_KEY = "seraf-bot-mini-pinned";
 const BOT_STATUS_KEY = "seraf-bot-status";
 const PANEL_MINIMIZED_KEY = "seraf-bot-panel-minimized";
 const PANEL_VISIBLE_KEY = "seraf-bot-panel-visible";
+const PANEL_OPACITY_KEY = "seraf-bot-panel-opacity";
+const REMEMBER_POSITION_KEY = "seraf-bot-remember-position";
+const RESTORE_ON_REFRESH_KEY = "seraf-bot-restore-on-refresh";
+const REMEMBER_VIEW_KEY = "seraf-bot-remember-view";
 
 
 let dragCleanups = [];
@@ -128,6 +132,8 @@ async function togglePanel() {
 
     restoreBotStatus(panel);
 
+    restorePanelOpacity(panel);
+
 
     minimizeButton.addEventListener("click", () => {
         minimizePanel(panel);
@@ -161,7 +167,24 @@ async function togglePanel() {
 
     opacityOptions.forEach((option) => {
         option.addEventListener("click", () => {
+            const selectedOpacity = option.dataset.opacity;
+
+
+            setPanelOpacity(
+                panel,
+                selectedOpacity
+            );
+
+
             opacityValue.textContent = option.textContent.trim();
+
+
+            opacityOptions.forEach((item) => {
+                item.classList.toggle(
+                    "selected",
+                    item.dataset.opacity === selectedOpacity
+                );
+            });
 
 
             opacityControl.classList.remove("open");
@@ -263,6 +286,54 @@ function switchPanelTab(panel, tabName) {
         content.classList.toggle(
             "active",
             content.dataset.content === tabName
+        );
+    });
+}
+
+
+function setPanelOpacity(panel, opacity) {
+    const app = panel.querySelector(".app");
+
+
+    app.style.setProperty(
+        "--panel-alpha",
+        opacity
+    );
+
+
+    localStorage.setItem(
+        PANEL_OPACITY_KEY,
+        opacity
+    );
+}
+
+
+function restorePanelOpacity(panel) {
+    const savedOpacity =
+        localStorage.getItem(
+            PANEL_OPACITY_KEY
+        ) || "1";
+    
+
+    const opacityValue = panel.querySelector(".opacity-value");
+
+
+    setPanelOpacity(
+        panel,
+        savedOpacity
+    );
+
+
+    opacityValue.textContent = `${Number(savedOpacity) * 100}%`;
+
+
+    const opacityOptions = panel.querySelectorAll(".opacity-menu button");
+
+
+    opacityOptions.forEach((option) => {
+        option.classList.toggle(
+            "selected",
+            option.dataset.opacity === savedOpacity
         );
     });
 }

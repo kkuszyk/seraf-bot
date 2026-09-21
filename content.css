@@ -14,6 +14,8 @@
 }
 
 #seraf-bot-panel .app {
+    --panel-alpha: 1;
+    
     display: grid;
     grid-template-columns: 180px 1fr;
     grid-template-rows: 60px 1fr;
@@ -34,7 +36,7 @@
 
     padding: 0 18px;
 
-    background-color: #151e29;
+    background-color: rgb(21 30 41 / var(--panel-alpha));
     border-bottom: 1px solid #293547;
 
     color: white;
@@ -116,7 +118,7 @@
 
     padding: 14px 10px;
     
-    background-color: #111923;
+    background-color: rgb(17 25 35 / var(--panel-alpha));
     border-right: 1px solid #202b3a;
 }
 
@@ -207,7 +209,7 @@
     min-width: 0;
     padding: 14px;
 
-    background-color: #0f151e;
+    background-color: rgb(15 21 30 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .main h2 {
@@ -275,7 +277,7 @@
     border: 1px solid #293547;
     border-radius: 10px;
 
-    background-color: #171f2b;
+    background-color: rgb(23 31 43 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .settings-card-header {
@@ -351,7 +353,7 @@
     border: 1px solid #39465a;
     border-radius: 7px;
 
-    background-color: #19212d;
+    background-color: rgb(35 33 45 / var(--panel-alpha));
     color: #d6deeb;
 
     font-size: 12px;
@@ -398,7 +400,7 @@
     border: 1px solid #39465a;
     border-radius: 7px;
 
-    background-color: #19212d;
+    background-color: rgb(35 33 45 / var(--panel-alpha));
 
     box-sizing: border-box;
 }
@@ -429,11 +431,31 @@
     color: #35d483;
 }
 
+#seraf-bot-panel .opacity-menu button.selected {
+    background-color: #163128;
+    color: #35d483;
+
+    font-weight: bold;
+}
+
+#seraf-bot-panel .opacity-menu button.selected::after {
+    content: "✓";
+
+    float: right;
+}
+
 #seraf-bot-panel .opacity-control.open .opacity-arrow {
     transform: rotate(90deg);
 }
 
 #seraf-bot-panel .opacity-arrow {
+    display: inline-block;
+
+    color: #8997ab;
+
+    font-size: 18px;
+    line-height: 1;
+
     transition: transform 0.15s ease;
 }
 
@@ -449,12 +471,12 @@
     border: 1px solid #245c4a;
     border-radius: 8px;
 
-    background-color: #10231f;
+    background-color: rgb(16 35 31 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .bot-status.paused {
     border-color: #76591f;
-    background-color: #261f12;
+    background-color: rgb(38 31 18 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .bot-status.paused .status-icon {
@@ -463,7 +485,7 @@
 
 #seraf-bot-panel .bot-status.stopped {
     border-color: #633a3f;
-    background-color: #251719;
+    background-color: rgb(37 23 25 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .bot-status.stopped .status-icon {
@@ -655,7 +677,7 @@
     border: 1px solid #293547;
     border-radius: 8px;
 
-    background-color: #171f2b;
+    background-color: rgb(23 31 43 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .stat-title {
@@ -711,7 +733,7 @@
     border: 1px solid #293547;
     border-radius: 12px;
 
-    background-color: #171f2b;
+    background-color: rgb(23 31 43 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .logs-header {
@@ -748,7 +770,7 @@
     border: 1px solid #202b3a;
     border-radius: 10px;
 
-    background-color: #121923;
+    background-color: rgb(18 25 35 / var(--panel-alpha));
 }
 
 #seraf-bot-panel .logs-icon {
