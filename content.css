@@ -290,8 +290,8 @@
 }
 
 #seraf-bot-panel .settings-card-icon {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
 
     flex-shrink: 0;
 
@@ -325,6 +325,28 @@
     gap: 12px;
 
     min-width: 0;
+}
+
+#seraf-bot-panel .opacity-icon-wrapper {
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    margin-top: 1px;
+
+    color: #b5c0d4;
+}
+
+#seraf-bot-panel .opacity-setting-icon {
+    width: 22px;
+    height: 22px;
+
+    display: block;
 }
 
 #seraf-bot-panel .settings-row-item-icon {
