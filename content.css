@@ -295,7 +295,7 @@
 
     flex-shrink: 0;
 
-    color: #35d483;
+    color: #b5c0d4;
 }
 
 #seraf-bot-panel .settings-card-header h3 {
@@ -318,6 +318,33 @@
     border-top: 1px solid #293547;
 }
 
+#seraf-bot-panel .settings-row-main {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+#seraf-bot-panel .settings-row-item-icon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #b5c0d4;
+}
+
+#seraf-bot-panel .settings-row-item-icon svg {
+    width: 15px;
+    height: 15px;
+}
+
 #seraf-bot-panel .settings-row-info {
     display: flex;
     flex-direction: column;
@@ -336,6 +363,74 @@
     color: #8997ab;
 
     font-size: 11px;
+}
+
+#seraf-bot-panel .behavior-card {
+    margin-top: 14px;
+}
+
+#seraf-bot-panel .behavior-card .settings-row {
+    padding-bottom: 14px;
+}
+
+#seraf-bot-panel .behavior-card .settings-row:last-child {
+    padding-bottom: 0;
+}
+
+#seraf-bot-panel .setting-toggle {
+    position: relative;
+
+    width: 42px;
+    height: 22px;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    border: 1px solid #39465a;
+    border-radius: 20px;
+
+    background-color: #202a38;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+#seraf-bot-panel .setting-toggle-knob {
+    position: absolute;
+
+    top: 3px;
+    left: 3px;
+
+    width: 14px;
+    height: 14px;
+
+    border-radius: 50%;
+
+    background-color: #8997ab;
+
+    transition:
+        left 0.2s ease,
+        background-color 0.2s ease;
+}
+
+#seraf-bot-panel .setting-toggle.active {
+    border-color: #35d483;
+
+    background-color: #163128;
+}
+
+#seraf-bot-panel .setting-toggle.active .setting-toggle-knob {
+    left: 23px;
+
+    background-color: #35d483;
+}
+
+#seraf-bot-panel .setting-toggle:hover {
+    border-color: #35d483;
 }
 
 #seraf-bot-panel .opacity-selector {

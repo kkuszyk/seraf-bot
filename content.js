@@ -20,13 +20,60 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 
+clearDisabledPanelState();
+
 restorePanelVisibility();
 
 
+function isPanelSettingEnabled(key) {
+    return localStorage.getItem(key) === "true";
+}
+
+
+function clearDisabledPanelState() {
+    if (
+        !isPanelSettingEnabled(
+            REMEMBER_POSITION_KEY
+        )
+    ) {
+        localStorage.removeItem(
+            PANEL_POSITION_KEY
+        );
+
+        localStorage.removeItem(
+            MINI_POSITION_KEY
+        );
+    }
+
+
+    if (
+        !isPanelSettingEnabled(
+            REMEMBER_VIEW_KEY
+        )
+    ) {
+        localStorage.removeItem(
+            PANEL_MINIMIZED_KEY
+        );
+    }
+}
+
+
 function restorePanelVisibility() {
-    const savedVisibility = localStorage.getItem(
-        PANEL_VISIBLE_KEY
-    );
+    const restoreOnRefresh =
+        isPanelSettingEnabled(RESTORE_ON_REFRESH_KEY);
+    
+    
+    if (!restoreOnRefresh) {
+        localStorage.setItem(
+            PANEL_VISIBLE_KEY,
+            JSON.stringify(false)
+        );
+
+        return;
+    }
+
+
+    const savedVisibility = localStorage.getItem(PANEL_VISIBLE_KEY);
 
 
     if (savedVisibility === "true") {
@@ -127,12 +174,24 @@ async function togglePanel() {
     
     const opacityOptions = panel.querySelectorAll(".opacity-menu button");
 
+    const rememberPositionToggle = panel.querySelector('[data-setting="remember-position"]');
+
+    const restoreOnRefreshToggle = panel.querySelector('[data-setting="restore-on-refresh"]');
+
+    const rememberViewToggle = panel.querySelector('[data-setting="remember-view"]');
+
 
     restorePinnedState(miniPanel, miniPin);
 
     restoreBotStatus(panel);
 
     restorePanelOpacity(panel);
+
+    restoreRememberPositionSetting(rememberPositionToggle);
+
+    restoreRestoreOnRefreshSetting(restoreOnRefreshToggle);
+
+    restoreRememberPositionSetting(rememberViewToggle);
 
 
     minimizeButton.addEventListener("click", () => {
@@ -205,6 +264,94 @@ async function togglePanel() {
             "aria-expanded",
             isOpen
         );
+    });
+
+    rememberPositionToggle.addEventListener("click", () => {
+        const isEnabled = !isPanelSettingEnabled(REMEMBER_POSITION_KEY);
+
+
+        localStorage.setItem(
+            REMEMBER_POSITION_KEY,
+            JSON.stringify(isEnabled)
+        );
+
+
+        rememberPositionToggle.classList.toggle(
+            "active",
+            isEnabled
+        );
+
+
+        rememberPositionToggle.setAttribute(
+            "aria-pressed",
+            isEnabled
+        );
+
+
+        if (!isEnabled) {
+            localStorage.removeItem(PANEL_POSITION_KEY);
+
+            localStorage.removeItem(MINI_POSITION_KEY);
+        }
+    });
+
+    restoreOnRefreshToggle.addEventListener("click", () => {
+        const isEnabled = !isPanelSettingEnabled(RESTORE_ON_REFRESH_KEY);
+
+
+        localStorage.setItem(
+            RESTORE_ON_REFRESH_KEY,
+            JSON.stringify(isEnabled)
+        );
+
+
+        restoreOnRefreshToggle.classList.toggle(
+            "active",
+            isEnabled
+        );
+
+
+        restoreOnRefreshToggle.setAttribute(
+            "aria-pressed",
+            isEnabled
+        );
+    });
+
+    rememberViewToggle.addEventListener("click", () => {
+        const isEnabled = !isPanelSettingEnabled(REMEMBER_VIEW_KEY);
+
+
+        localStorage.setItem(
+            REMEMBER_VIEW_KEY,
+            JSON.stringify(isEnabled)
+        );
+
+
+        rememberViewToggle.classList.toggle(
+            "active",
+            isEnabled
+        );
+
+
+        rememberViewToggle.setAttribute(
+            "aria-pressed",
+            isEnabled
+        );
+
+
+        if (isEnabled) {
+            const isMinimized = panel.classList.contains("is-minimized");
+
+
+            localStorage.setItem(
+                PANEL_MINIMIZED_KEY,
+                JSON.stringify(isMinimized)
+            );
+        }
+
+        else {
+            localStorage.removeItem(PANEL_MINIMIZED_KEY);
+        }
     });
 
 
@@ -336,6 +483,60 @@ function restorePanelOpacity(panel) {
             option.dataset.opacity === savedOpacity
         );
     });
+}
+
+
+function restoreRememberPositionSetting(toggle) {
+    const isEnabled =
+        isPanelSettingEnabled(
+            REMEMBER_POSITION_KEY
+        );
+    
+
+    toggle.classList.toggle(
+        "active",
+        isEnabled
+    );
+
+
+    toggle.setAttribute(
+        "aria-pressed",
+        isEnabled
+    );
+}
+
+
+function restoreRestoreOnRefreshSetting(toggle) {
+    const isEnabled = isPanelSettingEnabled(RESTORE_ON_REFRESH_KEY);
+
+
+    toggle.classList.toggle(
+        "active",
+        isEnabled
+    );
+
+
+    toggle.setAttribute(
+        "aria-pressed",
+        isEnabled
+    );
+}
+
+
+function restoreRememberViewSetting(toggle) {
+    const isEnabled = isPanelSettingEnabled(REMEMBER_VIEW_KEY);
+
+
+    toggle.classList.toggle(
+        "active",
+        isEnabled
+    );
+
+
+    toggle.setAttribute(
+        "aria-pressed",
+        isEnabled
+    );
 }
 
 
@@ -530,34 +731,58 @@ function restoreBotStatus(panel) {
 
 
 function restorePanelViewState(panel) {
-    const savedState = localStorage.getItem(
-        PANEL_MINIMIZED_KEY
-    );
+    const rememberView =
+        isPanelSettingEnabled(
+            REMEMBER_VIEW_KEY
+        );
+
+    const rememberPosition =
+        isPanelSettingEnabled(
+            REMEMBER_POSITION_KEY
+        );
 
 
-    const isMinimized =
-        savedState === null
-        ? false
-        : JSON.parse(savedState);
-    
+    if (rememberView) {
+        const savedState =
+            localStorage.getItem(
+                PANEL_MINIMIZED_KEY
+            );
 
-    if (isMinimized) {
-        panel.classList.add(
+
+        const isMinimized =
+            savedState === "true";
+
+
+        panel.classList.toggle(
+            "is-minimized",
+            isMinimized
+        );
+    }
+
+
+    else {
+        panel.classList.remove(
             "is-minimized"
         );
+    }
 
-        restorePosition(
-            panel,
-            MINI_POSITION_KEY
-        );
 
+    if (!rememberPosition) {
         return;
     }
 
 
+    const positionKey =
+        panel.classList.contains(
+            "is-minimized"
+        )
+            ? MINI_POSITION_KEY
+            : PANEL_POSITION_KEY;
+
+
     restorePosition(
         panel,
-        PANEL_POSITION_KEY
+        positionKey
     );
 }
 
@@ -836,6 +1061,32 @@ async function removePanel(panel) {
     );
 
     dragCleanups = [];
+
+
+    if (
+        !isPanelSettingEnabled(
+            REMEMBER_POSITION_KEY
+        )
+    ) {
+        localStorage.removeItem(
+            PANEL_POSITION_KEY
+        );
+
+        localStorage.removeItem(
+            MINI_POSITION_KEY
+        );
+    }
+
+
+    if (
+        !isPanelSettingEnabled(
+            REMEMBER_VIEW_KEY
+        )
+    ) {
+        localStorage.removeItem(
+            PANEL_MINIMIZED_KEY
+        );
+    }
 
 
     panel.remove();
