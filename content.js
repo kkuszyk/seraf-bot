@@ -191,7 +191,7 @@ async function togglePanel() {
 
     restoreRestoreOnRefreshSetting(restoreOnRefreshToggle);
 
-    restoreRememberPositionSetting(rememberViewToggle);
+    restoreRememberViewSetting(rememberViewToggle);
 
 
     minimizeButton.addEventListener("click", () => {
